@@ -6,10 +6,11 @@ import Navbar from "../components/nav";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
+import dynamic from "next/dynamic";
 
-// FIXED PDF.JS (Next.js compatible)
-import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
-import "pdfjs-dist/legacy/build/pdf.worker";
+// // FIXED PDF.JS (Next.js compatible)
+// import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
+// import "pdfjs-dist/legacy/build/pdf.worker";
 
 
 export default function PdfToImage() {
@@ -18,7 +19,16 @@ export default function PdfToImage() {
   const [loading, setLoading] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [loadingFile, setLoadingFile] = useState(false);
-
+  const [pdfModule, setPdfModule] = useState<any>(null);
+  
+   // Load pdfjs only on client
+  if (typeof window !== "undefined" && !pdfModule) {
+    import("pdfjs-dist/legacy/build/pdf").then((mod) => {
+      setPdfModule(mod);
+      mod.GlobalWorkerOptions.workerSrc =
+        `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${mod.version}/pdf.worker.min.js`;
+    });
+  }
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -49,7 +59,20 @@ export default function PdfToImage() {
 
     try {
       const arrayBuffer = await pdfFile.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+
+      // Ensure pdfjs module is available (use loaded pdfModule or dynamically import)
+      let pdfLib = pdfModule;
+      if (!pdfLib && typeof window !== "undefined") {
+        const mod = await import("pdfjs-dist/legacy/build/pdf");
+        mod.GlobalWorkerOptions.workerSrc =
+          `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${mod.version}/pdf.worker.min.js`;
+        setPdfModule(mod);
+        pdfLib = mod;
+      }
+
+      if (!pdfLib) throw new Error("Failed to load pdfjs library");
+
+      const pdf = await pdfLib.getDocument(arrayBuffer).promise;
 
       let imgList: string[] = [];
 

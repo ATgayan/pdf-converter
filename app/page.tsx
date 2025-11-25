@@ -1,6 +1,4 @@
 
-
-import Navbar from "./components/nav"
 import Hero from "./Hero/Hero"
 
 

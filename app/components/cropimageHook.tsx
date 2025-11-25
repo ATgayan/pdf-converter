@@ -1,3 +1,5 @@
+"use client";
+
 // app/components/CropImage.tsx
 import dynamic from "next/dynamic";
 

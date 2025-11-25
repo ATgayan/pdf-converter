@@ -4,7 +4,6 @@ import React, { useState, ChangeEvent, useCallback,useRef } from "react";
 import { jsPDF } from "jspdf";
 import { useDropzone } from "react-dropzone";
 import Navbar from "../components/nav"
-import { file } from "jszip";
 import CropPopup from "../components/cropimageHook";
 
 // TypeScript version of Image → PDF converter
