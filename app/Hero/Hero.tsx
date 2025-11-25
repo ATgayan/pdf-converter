@@ -1,24 +1,34 @@
 "use client";
 
 import { useRouter } from "next/navigation"; 
+import { useState } from "react";
+import Navbar from "../components/nav";
 
 export default function Hero() {
-
+  
+    const [PdftoImageActive, setPdftoImageActive] = useState(false);
+    const [ImagetoPdfActive, setImagetoPdfActive] = useState(false);
     //navigations
     const router = useRouter()
 
     const goToImageToPdf = () => {
+        setImagetoPdfActive(true);
         router.push('/ImagetoPdf');
+        setImagetoPdfActive(false);
     }
    
 
     const goToPdfToImage = () => {
+        setPdftoImageActive(true);
         router.push('/PdftoImage');
+        setPdftoImageActive(false);
     }
 
     return (
-   <section className="bg-white lg:grid lg:h-screen lg:place-content-center">
-  <div className="mx-auto w-screen max-w-7xl px-4 py-16 sm:px-6 sm:py-24 md:grid md:grid-cols-2 md:items-center md:gap-4 lg:px-8 lg:py-32">
+        <>
+        <Navbar />
+   <section className="animate-fadeIn lg:grid lg:place-content-center">
+  <div className="mx-auto w-screen max-w-7xl px-4 py-16 sm:px-6 sm:py-24 md:grid md:grid-cols-2 md:items-center md:gap-4 lg:px-8 lg:py-5">
     <div className="max-w-prose text-left">
     
       <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
@@ -32,17 +42,17 @@ export default function Hero() {
       </p>
 
       <div className="mt-4 flex gap-4 sm:mt-6">
-        <a onClick={goToImageToPdf} className="inline-block rounded border border-indigo-600 bg-indigo-600 px-5 py-3 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700" href="#">
+        <button onClick={goToImageToPdf} className=" inline-block rounded border border-indigo-600 bg-indigo-600 px-5 py-3 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700" href="#">
           Image to PDF
-        </a>
+        </button>
 
-        <a onClick={goToPdfToImage} className="inline-block rounded border border-gray-200 px-5 py-3 font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-900" href="#">
+        <button onClick={goToPdfToImage} className="inline-block rounded border border-gray-200 px-5 py-3 font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-900" href="#">
           PDF to Image
-        </a>
+        </button>
       </div>
     </div>
 
-    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"  x="0px" y="0px"
+    <svg version="1.1" id="Layer_1"   x="0px" y="0px"
      width="100%" viewBox="0 0 7730 7730" enable-background="new 0 0 7730 7730">
 <path fill="#FDFEFE" opacity="1.000000" stroke="none" 
     d="
@@ -7546,5 +7556,6 @@ z"/>
 </svg>
   </div>
 </section>
+</>
     )
 }
