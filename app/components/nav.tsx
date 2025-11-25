@@ -1,12 +1,14 @@
 "use client"
 
 import { Disclosure, DisclosureButton, DisclosurePanel,} from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+
+import { useRouter } from 'next/navigation';
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
-  { name: 'About us', href: '#', current: false },
-  { name: 'Contact us', href: '#', current: false },
+  { name: 'About us', href: '/About', current: false },
+  { name: 'Feedback', href: '/ContactForm', current: false },
 ]
 
 
@@ -16,7 +18,8 @@ function classNames(...classes: string[]) {
 
 export default function Example() {
 
-  
+  const router = useRouter();
+
 
   return (
     <Disclosure as="nav" className="relative bg-white-800">
@@ -32,7 +35,13 @@ export default function Example() {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-           
+           <div className='flex justify-center items-center'>
+  <p onClick={() => router.push('/')} className="cursor-pointer text-2xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+    pd converter
+  </p>
+</div>
+   <div className="hidden pl-10 sm:ml-6 sm:flex sm:space-x-8"/>
+
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
                 {navigation.map((item) => (
