@@ -2475,7 +2475,7 @@ z"/>
             <button
               type="submit"
               disabled={state.submitting}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold 
+              className=" cursor-pointer w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold 
               py-2 rounded-lg transition active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {state.submitting ? "Sending..." : "Submit Feedback"}
