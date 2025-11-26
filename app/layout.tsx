@@ -7,9 +7,12 @@ import { Suspense } from "react"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "PDF Converter - Convert Images to PDF and PDF to Images",
+  title: "PDConverter - Convert Images to PDF and PDF to Images",
   description: "Professional file conversion tool for images and PDFs",
-  generator: "v0.app",
+  icons: {
+    icon: "/favicon.ico",
+  },
+  
 }
 
 export default function RootLayout({
