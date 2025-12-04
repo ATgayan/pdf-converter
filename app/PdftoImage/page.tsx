@@ -6,7 +6,7 @@ import Navbar from "../components/nav";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { ArrowUpTrayIcon } from "@heroicons/react/24/outline";
-import dynamic from "next/dynamic";
+
 
 
 export default function PdfToImage() {
@@ -19,7 +19,7 @@ export default function PdfToImage() {
   
    // Load pdfjs only on client
   if (typeof window !== "undefined" && !pdfModule) {
-    import("pdfjs-dist/legacy/build/pdf").then((mod) => {
+    import("pdfjs-dist/legacy/build/pdf.js").then((mod) => {
       setPdfModule(mod);
       mod.GlobalWorkerOptions.workerSrc =
         `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${mod.version}/pdf.worker.min.js`;
@@ -190,7 +190,33 @@ const onDrop = useCallback((acceptedFiles: File[]) => {
             <span className="text-slate-400 text-sm">Upload PDF</span>
           </>
         ) : (
-          <span className="text-slate-600 font-medium text-sm text-center truncate">{pdfFile.name}</span>
+          <span className="flex flex-col items-center gap-2 text-slate-600 font-medium text-sm text-center w-full">
+  {/* File Icon */}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-15 h-15 text-slate-500"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M7 3h8l4 4v12a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z"
+      
+    />
+  </svg>
+
+  {/* Truncated File Name */}
+  <span className="truncate w-full">
+    {pdfFile.name.length > 10
+      ? pdfFile.name.slice(0, 10) + "…"
+      : pdfFile.name}
+  </span>
+</span>
+
         )}
       </div>
 
