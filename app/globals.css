@@ -5,10 +5,22 @@
 
 
 
-html, body {
-  height: 100%;
-  overflow: hidden; /* disables scrolling */
+/* Desktop: disable scrolling */
+@media (min-width: 768px) {
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
 }
+
+/* Mobile: allow scrolling */
+@media (max-width: 767px) {
+  html, body {
+    height: auto;
+    overflow: auto;
+  }
+}
+
 
 /* Hide scrollbar (Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
