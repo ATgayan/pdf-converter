@@ -64,7 +64,7 @@ export default function Example() {
            
 
             {/* Profile dropdown */}
-           <p className='text-shadow-black p-3 hover:text-zinc-400 font-semibold cursor-pointer'>LOGIN</p>
+           <p className='text-shadow-black p-3 hover:text-zinc-400 font-semibold cursor-pointer'></p>
           </div>
         </div>
       </div>
