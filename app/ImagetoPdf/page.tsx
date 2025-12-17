@@ -9,7 +9,7 @@ import { ClipLoader } from "react-spinners";
 
 
 
-import { DndContext, PointerSensor, useSensor, useSensors, closestCenter } from "@dnd-kit/core";
+import { DndContext, PointerSensor, TouchSensor, useSensor, useSensors, closestCenter } from "@dnd-kit/core";
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import SortableImage from "../components/SortableImage";
 
@@ -96,12 +96,14 @@ export default function PdftoImage() {
 
 
   const sensors = useSensors(
-  useSensor(PointerSensor, {
-    activationConstraint: {
-      distance: 5, // drag starts after 5px movement
-    },
-  })
-);
+    useSensor(PointerSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        distance: 5, // need to move 5px before drag starts, prevents accidental taps
+      },
+    })
+  );
+
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "image/*": [] },
@@ -114,7 +116,7 @@ export default function PdftoImage() {
   const removeImage = (index: number) => {
     setPreviews((prev) => prev.filter((_, i) => i !== index));
     setFiles((prev) => prev.filter((_, i) => i !== index));
-};
+  };
 
 
 
@@ -165,40 +167,36 @@ export default function PdftoImage() {
                   )}
 
                   {/* Preview images */}
-               <DndContext
-               sensors={sensors}
-  collisionDetection={closestCenter}
-  onDragEnd={(event) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
+                  <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={(event) => {
+                      const { active, over } = event;
+                      if (!over || active.id === over.id) return;
 
-    const oldIndex = previews.indexOf(active.id as string);
-    const newIndex = previews.indexOf(over.id as string);
+                      const oldIndex = previews.indexOf(active.id as string);
+                      const newIndex = previews.indexOf(over.id as string);
 
-    setPreviews((items) => arrayMove(items, oldIndex, newIndex));
-    setFiles((items) => arrayMove(items, oldIndex, newIndex));
-  }}
->
-  <SortableContext items={previews}>
-    <div className="flex flex-wrap gap-3">
-      {previews.map((src, idx) => (
-        <SortableImage
-          key={src}
-          id={src}
-          src={src}
-          idx={idx}
-          fileName={files[idx]?.name}
-          imageindex={imageindex}
-          removeImage={removeImage}
-        />
-      ))}
-    </div>
-  </SortableContext>
-</DndContext>
-
-
-
-
+                      setPreviews((items) => arrayMove(items, oldIndex, newIndex));
+                      setFiles((items) => arrayMove(items, oldIndex, newIndex));
+                    }}
+                  >
+                    <SortableContext items={previews}>
+                      <div className="flex flex-wrap gap-3">
+                        {previews.map((src, idx) => (
+                          <SortableImage
+                            key={src}
+                            id={src}
+                            src={src}
+                            idx={idx}
+                            fileName={files[idx]?.name}
+                            imageindex={imageindex}
+                            removeImage={removeImage}
+                          />
+                        ))}
+                      </div>
+                    </SortableContext>
+                  </DndContext>
 
                 </div>
               </div>
@@ -210,101 +208,99 @@ export default function PdftoImage() {
             <div className="shadow-2xl rounded-2xl w-full sm:w-[40%] p-6
                 flex flex-col gap-6 items-center bg-white">
 
-  {/*Primary Upload Button */}
-  <button
-    onClick={() => inputRef.current?.click()}
-    disabled={imageuploading}
-    className="w-full py-4 rounded-xl
+              {/*Primary Upload Button */}
+              <button
+                onClick={() => inputRef.current?.click()}
+                disabled={imageuploading}
+                className="w-full py-4 rounded-xl
                bg-green-500 hover:bg-green-600
                text-white text-xl font-semibold
                shadow-lg
                flex justify-center items-center gap-3
                disabled:opacity-70 disabled:cursor-not-allowed"
-  >
-    {imageuploading ? (
-      <ClipLoader size={22} color="white" />
-    ) : (
-      <>
-        <span>Upload Images</span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-6 h-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0l-4 4m4-4l4 4"
-          />
-        </svg>
-      </>
-    )}
-  </button>
+              >
+                {imageuploading ? (
+                  <ClipLoader size={22} color="white" />
+                ) : (
+                  <>
+                    <span>Upload Images</span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-6 h-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0l-4 4m4-4l4 4"
+                      />
+                    </svg>
+                  </>
+                )}
+              </button>
 
-  {/* Options */}
-  <div className="w-full flex justify-between items-center">
+              {/* Options */}
+              <div className="w-full flex justify-between items-center">
 
-    {/* Show Index */}
-    <label className="flex items-center gap-2 cursor-pointer select-none">
-      <input
-        type="checkbox"
-        checked={imageindex}
-        onChange={() => setImageIndex(!imageindex)}
-        className="hidden peer"
-      />
-      <span className="w-5 h-5 rounded border border-gray-500 flex items-center justify-center
+                {/* Show Index */}
+                <label className="flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={imageindex}
+                    onChange={() => setImageIndex(!imageindex)}
+                    className="hidden peer"
+                  />
+                  <span className="w-5 h-5 rounded border border-gray-500 flex items-center justify-center
         peer-checked:bg-blue-600 peer-checked:border-blue-600
         peer-checked:before:content-['✔'] peer-checked:before:text-white text-xs"
-      />
-      <span className="text-sm font-medium text-gray-700">
-        Show image index
-      </span>
-    </label>
+                  />
+                  <span className="text-sm font-medium text-gray-700">
+                    Show image index
+                  </span>
+                </label>
 
-    {/* Clear */}
-    <button
-      onClick={clearAll}
-      className="text-sm text-red-500 hover:text-red-600 font-medium"
-    >
-      Clear all
-    </button>
-  </div>
+                {/* Clear */}
+                <button
+                  onClick={clearAll}
+                  className="text-sm text-red-500 hover:text-red-600 font-medium"
+                >
+                  Clear all
+                </button>
+              </div>
 
-  {/*  PDF File Name */}
-  <div className="w-full">
-    <label className="block text-sm font-medium text-gray-600 mb-1">
-      PDF file name
-    </label>
-    <input
-      className="w-full bg-gray-100 border rounded-lg
+              {/*  PDF File Name */}
+              <div className="w-full">
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  PDF file name
+                </label>
+                <input
+                  className="w-full bg-gray-100 border rounded-lg
                  py-3 px-4
                  focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      type="text"
-      placeholder="Enter PDF file name"
-      value={pdfName}
-      onChange={(e) => setPdfName(e.target.value)}
-    />
-  </div>
+                  type="text"
+                  placeholder="Enter PDF file name"
+                  value={pdfName}
+                  onChange={(e) => setPdfName(e.target.value)}
+                />
+              </div>
 
-  {/* Convert Button */}
-  <button
-    onClick={convertToPdf}
-    disabled={loading || previews.length === 0}
-    className="w-full py-3 rounded-xl
+              {/* Convert Button */}
+              <button
+                onClick={convertToPdf}
+                disabled={loading || previews.length === 0}
+                className="w-full py-3 rounded-xl
                bg-indigo-600 hover:bg-indigo-700
                text-white font-semibold
                shadow-md
                disabled:opacity-50 disabled:cursor-not-allowed"
-  >
-    {loading ? "Converting..." : "Convert to PDF"}
-  </button>
+              >
+                {loading ? "Converting..." : "Convert to PDF"}
+              </button>
 
-</div>
-
-
+            </div>
 
 
           </div>
