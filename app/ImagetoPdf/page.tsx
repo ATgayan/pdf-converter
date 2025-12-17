@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, ChangeEvent, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { jsPDF } from "jspdf";
 import { useDropzone } from "react-dropzone";
 import Navbar from "../components/nav"
@@ -9,8 +9,8 @@ import { ClipLoader } from "react-spinners";
 
 
 
-import { DndContext, closestCenter } from "@dnd-kit/core";
-import { SortableContext, useSortable, arrayMove } from "@dnd-kit/sortable";
+import { DndContext, PointerSensor, useSensor, useSensors, closestCenter } from "@dnd-kit/core";
+import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import SortableImage from "../components/SortableImage";
 
 
@@ -94,6 +94,15 @@ export default function PdftoImage() {
 
   }, []);
 
+
+  const sensors = useSensors(
+  useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 5, // drag starts after 5px movement
+    },
+  })
+);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: { "image/*": [] },
     multiple: true,
@@ -157,6 +166,7 @@ export default function PdftoImage() {
 
                   {/* Preview images */}
                <DndContext
+               sensors={sensors}
   collisionDetection={closestCenter}
   onDragEnd={(event) => {
     const { active, over } = event;

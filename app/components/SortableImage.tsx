@@ -55,12 +55,12 @@ export default function SortableImage({
       {/* Image */}
       <div
         {...listeners}
-       className="w-full h-full rounded overflow-hidden border p-1 bg-white">
+       className="w-full h-full rounded overflow-hidden border p-1 bg-white cursor-grab active:cursor-grabbing touch-auto">
         <img
           src={src}
           title={fileName}
           alt={fileName}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover pointer-events-none"
         />
       </div>
 
